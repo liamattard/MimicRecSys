@@ -2,8 +2,6 @@ import Data_Processing.database_tools as db
 
 def start():
 
-    # TODO: make all values contain 3 
-
     print("Setting up database connection")
     db.connect()
 
@@ -36,7 +34,7 @@ def create_visit_diagnosis_map(diagnosis):
         diagnose_value =  [seq_num,icd9_code]
 
         if not hadm_id in visit_map:
-            visit_map[hadm_id] = [[diagnose_value]]
+            visit_map[hadm_id] = [[diagnose_value], [],[]]
         else:
             visit_map[hadm_id][0].append(diagnose_value)
 
@@ -53,14 +51,14 @@ def create_visit_procedures_map(visit_map, procedures):
         procedure_value =  [seq_num, icd9_code]
 
         if not hadm_id in visit_map:
-            visit_map[hadm_id] = [[],[procedure_value]]
+            visit_map[hadm_id] = [[],[procedure_value],[]]
         else:
-            if len(visit_map[hadm_id]) < 2:
+            # if len(visit_map[hadm_id]) < 2:
 
-                visit_map[hadm_id] = [visit_map[hadm_id][0],[procedure_value]]
+            #     visit_map[hadm_id] = [visit_map[hadm_id][0],[procedure_value]]
 
-            else:
-                visit_map[hadm_id][1].append(procedure_value)
+            # else:
+            visit_map[hadm_id][1].append(procedure_value)
 
     return visit_map 
 
@@ -73,14 +71,13 @@ def create_visit_prescriptions_map(visit_map, prescriptions):
 
         if not hadm_id in visit_map:
             visit_map[hadm_id] = [[],[],[drug_code]]
+        # else:
+        #     if len(visit_map[hadm_id]) == 1:
+        #         visit_map[hadm_id] = [visit_map[hadm_id][0],[],[drug_code]]
+        #     if len(visit_map[hadm_id]) == 2 :
+        #         visit_map[hadm_id] = [visit_map[hadm_id][0],visit_map[hadm_id][1],[drug_code]]
         else:
-            if len(visit_map[hadm_id]) == 1:
-                visit_map[hadm_id] = [visit_map[hadm_id][0],[],[drug_code]]
-            if len(visit_map[hadm_id]) == 2 :
-                visit_map[hadm_id] = [visit_map[hadm_id][0],visit_map[hadm_id][1],[drug_code]]
-            else:
-
-                visit_map[hadm_id][2].append(drug_code)
+            visit_map[hadm_id][2].append(drug_code)
 
     return visit_map 
 
