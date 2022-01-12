@@ -3,7 +3,7 @@ import Data_Processing.process
 
 
 def main():
-    options = ["Process Data", "exit"]
+    options = ["Create Data Frame", "Clean Data", "exit"]
     terminal_menu = TerminalMenu(options)
     menu_entry_index = terminal_menu.show()
 
@@ -11,6 +11,9 @@ def main():
         Data_Processing.process.start()
 
     if(options[menu_entry_index] == options[1]):
+        Data_Processing.process.clean()
+
+    if(options[menu_entry_index] == options[2]):
         exit()
 
 

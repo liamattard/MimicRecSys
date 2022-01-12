@@ -9,9 +9,16 @@ def start():
     user_visit_map = get_user_visit_map(db)
     df = create_data_frame(user_visit_map)
 
-    with open('my_df.pickle', 'wb') as f:
+    with open('data_frame.pickle', 'wb') as f:
         pickle.dump(df.T, f)
 
+def clean():
+    # TODO: Remove the ones without medicine
+    # TODO: Make codes numerical
+    with open('data_frame.pickle', 'rb') as f:
+        my_df_unpickled = pickle.load(f)
+
+        print("Success!")
 
 def get_user_visit_map(db):
     diagnosis = db.query("select hadm_id,seq_num,icd9_code from mimiciii.diagnoses_icd")
