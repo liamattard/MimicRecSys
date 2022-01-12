@@ -1,10 +1,19 @@
 import Data_Processing.database_tools as db
+import pandas as pd
+import pickle
 
 def start():
 
     print("Setting up database connection")
     db.connect()
+    user_visit_map = get_user_visit_map(db)
+    df = create_data_frame(user_visit_map)
 
+    with open('my_df.pickle', 'wb') as f:
+        pickle.dump(df.T, f)
+
+
+def get_user_visit_map(db):
     diagnosis = db.query("select hadm_id,seq_num,icd9_code from mimiciii.diagnoses_icd")
     visit_map = create_visit_diagnosis_map(diagnosis)
 
@@ -15,10 +24,21 @@ def start():
     visit_map = create_visit_prescriptions_map(visit_map, prescriptions)
 
     admissions = db.query("select subject_id,hadm_id from mimiciii.admissions")
-    user_visit_map = create_user_visit_map(admissions, visit_map)
 
-    print(len(user_visit_map[68]))
+    return create_user_visit_map(admissions, visit_map)
+
+def create_data_frame(user_visit_map):
+    max_visits = 0
+    for key in user_visit_map:
+        number_of_visits = len(user_visit_map[key])
+        if (number_of_visits > max_visits):
+            max_visits = number_of_visits
+
+    for key in user_visit_map:
+        number_of_visits = len(user_visit_map[key])
+        user_visit_map[key].extend([[[],[],[]]] * (max_visits-number_of_visits))
         
+    return pd.DataFrame(user_visit_map).T
 
 def create_visit_diagnosis_map(diagnosis):
 
