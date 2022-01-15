@@ -1,1 +1,1 @@
-select * from mimiciii.prescriptions limit 10;
+select * from mimiciii.prescriptions limit 1000;

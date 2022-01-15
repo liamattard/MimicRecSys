@@ -4,22 +4,26 @@ import configparser
 cursor = None
 config = configparser.ConfigParser()
 config.sections()
-config.read('properties.ini')
+config.read("properties.ini")
+
 
 def connect():
-
     global cursor
 
     try:
-        connection = psycopg2.connect(user= config['POSTGRES']['user'],
-                                    password= config['POSTGRES']['password'],
-                                    host=config['POSTGRES']['host'],
-                                    port=config['POSTGRES']['port'],
-                                    database=config['POSTGRES']['database'])
+        connection = psycopg2.connect(
+            user=config["POSTGRES"]["user"],
+            password=config["POSTGRES"]["password"],
+            host=config["POSTGRES"]["host"],
+            port=config["POSTGRES"]["port"],
+            database=config["POSTGRES"]["database"],
+        )
         cursor = connection.cursor()
+        cursor.execute("SET search_path TO mimiciii;")
 
     except (Exception, psycopg2.Error) as error:
         print("Error while fetching data from PostgreSQL", error)
+
 
 def query(query):
     try:
