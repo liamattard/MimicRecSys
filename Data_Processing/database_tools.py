@@ -1,7 +1,7 @@
 import psycopg2
 import configparser
 
-cursor = None
+cursor = None  # type: psycopg2.cursor
 config = configparser.ConfigParser()
 config.sections()
 config.read("properties.ini")

@@ -1,1 +1,0 @@
-select * from mimiciii.prescriptions limit 1000;

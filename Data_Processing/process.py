@@ -13,14 +13,22 @@ def start():
     with open("data_frame.pickle", "wb") as f:
         pickle.dump(df.T, f)
 
+def get_user_visit_map_diagnoses(db):
+    diagnosis = db.query(
+        "SELECT "
+        + "diagnoses_icd.hadm_id, diagnoses_icd.seq_num, "
+        + "d_icd_diagnoses.row_id "
+        + "FROM diagnoses_icd, d_icd_diagnoses "
+        + "WHERE diagnoses_icd.icd9_code = d_icd_diagnoses.icd9_code"
+    )
+    visit_map = create_visit_diagnosis_map(diagnosis)
 
-def clean():
-    # TODO: Remove the ones without medicine
-    # TODO: Make codes numerical
-    with open("data_frame.pickle", "rb") as f:
-        my_df_unpickled = pickle.load(f)
+    prescriptions = db.query("select hadm_id,ndc from prescriptions")
+    visit_map = create_visit_prescriptions_map(visit_map, prescriptions)
 
-        print("Success!")
+    admissions = db.query("select subject_id,hadm_id from admissions")
+
+    return create_user_visit_map(admissions, visit_map)
 
 
 def get_user_visit_map(db):
