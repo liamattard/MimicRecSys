@@ -13,6 +13,7 @@ def start():
     with open("data_frame.pickle", "wb") as f:
         pickle.dump(df.T, f)
 
+
 def get_user_visit_map_diagnoses(db):
     diagnosis = db.query(
         "SELECT "

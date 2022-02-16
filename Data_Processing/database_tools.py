@@ -1,7 +1,7 @@
 import psycopg2
 import configparser
 
-cursor = None  # type: psycopg2.cursor
+cursor = None
 config = configparser.ConfigParser()
 config.sections()
 config.read("properties.ini")
@@ -28,9 +28,13 @@ def connect():
 def query(query):
     try:
 
-        cursor.execute(query)
-        print("Quering database")
-        return cursor.fetchall()
+        if(type(cursor) is psycopg2.cursor):
+            cursor.execute(query)
+            print("Quering database")
+            return cursor.fetchall()
+        else:
+            print("Error while fetching data from PostgreSQL")
 
     except (Exception, psycopg2.Error) as error:
         print("Error while fetching data from PostgreSQL", error)
+
