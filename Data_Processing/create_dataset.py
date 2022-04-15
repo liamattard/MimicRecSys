@@ -51,7 +51,7 @@ def create_dataset(db):
             write.writerow([user_map[user], user])
 
     with open('Data/users.pickle', "wb") as f:
-        pickle.dump(dataset, f)
+        pickle.dump(list(map(list, user_map.items())), f)
 
     # -----------------------------------------
     # Write the Medicine Key CSV File + pickle
@@ -64,7 +64,9 @@ def create_dataset(db):
             write.writerow([medicine_map[medicine], medicine])
 
     with open('Data/medicine.pickle', "wb") as f:
-        pickle.dump(dataset, f)
+        pickle.dump(list(map(list, medicine_map.items())), f)
+
+    breakpoint()
 
 
 print("Setting up database connection")

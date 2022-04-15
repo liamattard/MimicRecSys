@@ -2,7 +2,7 @@ import pickle
 import numpy as np
 import tensorflow.compat.v1 as tf  # type: ignore
 import pandas as pd
-from Data_Processing.CFModel import CFModel
+from Old_Tutorial.CFModel import CFModel
 
 
 def build_sparse_matrix(dataset, users, medicine):
@@ -71,5 +71,3 @@ def start():
                         init_stdev=0.5)
 
     model.train(num_iterations=100, learning_rate=10)
-
-

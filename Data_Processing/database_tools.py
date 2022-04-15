@@ -1,5 +1,8 @@
 import psycopg2
 import configparser
+import logging
+log = logging.getLogger("database_tools")
+
 
 cursor = None
 config = configparser.ConfigParser()
@@ -22,19 +25,18 @@ def connect():
         cursor.execute("SET search_path TO mimiciii;")
 
     except (Exception, psycopg2.Error) as error:
-        print("Error while fetching data from PostgreSQL", error)
+        log.error("Error while fetching data from PostgreSQL", error)
 
 
 def query(query):
     try:
 
-        if(type(cursor) is psycopg2.cursor):
+        if(cursor is not None):
             cursor.execute(query)
-            print("Quering database")
+            log.info("Quering database")
             return cursor.fetchall()
         else:
-            print("Error while fetching data from PostgreSQL")
+            log.error("Error while fetching data from PostgreSQL")
 
     except (Exception, psycopg2.Error) as error:
-        print("Error while fetching data from PostgreSQL", error)
-
+        log.error("Error while fetching data from PostgreSQL", error)
