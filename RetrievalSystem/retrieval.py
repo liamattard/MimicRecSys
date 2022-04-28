@@ -2,8 +2,6 @@ import tensorflow as tf
 import numpy as np
 import wandb
 import tensorflow_recommenders as tfrs
-import tempfile
-import os
 
 from wandb.keras import WandbCallback
 from RetrievalSystem.model import build_model
@@ -31,7 +29,7 @@ def start_train(user_medicine_tensor, medicine_tensor):
     # Implement a retrieval model.
     wandb.config = {
       "learning_rate": 0.1,
-      "epochs": 3,
+      "epochs": 20,
       "batch_size": 1_000
     }
 
@@ -43,7 +41,7 @@ def start_train(user_medicine_tensor, medicine_tensor):
     cached_train = train.shuffle(100_000).batch(8192).cache()
     cached_test = test.batch(4096).cache()
 
-    model.fit(cached_train, epochs=3, callbacks=[WandbCallback()])
+    model.fit(cached_train, epochs=20, callbacks=[WandbCallback()])
     model.evaluate(cached_test, return_dict=True, callbacks=[WandbCallback()])
 
     # Export it for efficient serving by building an approximate nearest
