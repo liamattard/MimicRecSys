@@ -6,9 +6,11 @@ def main():
 
     user_medicine_dataset, medicine_dataset = preprocessing.start(
                                                file='Data/SOTA/dataset.pickle')
+
     retrieval.start_train(user_medicine_dataset, medicine_dataset)
 
-    # retrieval.import_model('Data/model')
+    # model = retrieval.import_model('Data/model')
+    # print(retrieval.get_user_recommendations("100", model))
 
 
 if __name__ == "__main__":

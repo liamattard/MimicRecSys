@@ -52,6 +52,13 @@ def load_sota_values(user_medicine_list):
                             user_medicine_list.subject_id.duplicated(
                                 keep=False)]
 
+    # remove all users that are in the SOTA testing set
+    sota_testing_set = dill.load(open('Data/test_subject_ids.pkl', 'rb'))
+
+    user_medicine_list = user_medicine_list[
+                            ~user_medicine_list.subject_id.isin(
+                                sota_testing_set)]
+
     return user_medicine_list
 
 

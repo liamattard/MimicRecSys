@@ -29,8 +29,8 @@ def start_train(user_medicine_tensor, medicine_tensor):
     # Implement a retrieval model.
     wandb.config = {
       "learning_rate": 0.1,
-      "epochs": 20,
-      "batch_size": 1_000
+      "epochs": 10,
+      "batch_size": 100
     }
 
     model = build_model(unique_user_ids, unique_medicine_list, medicine_tensor)
@@ -41,7 +41,7 @@ def start_train(user_medicine_tensor, medicine_tensor):
     cached_train = train.shuffle(100_000).batch(8192).cache()
     cached_test = test.batch(4096).cache()
 
-    model.fit(cached_train, epochs=20, callbacks=[WandbCallback()])
+    model.fit(cached_train, epochs=10, callbacks=[WandbCallback()])
     model.evaluate(cached_test, return_dict=True, callbacks=[WandbCallback()])
 
     # Export it for efficient serving by building an approximate nearest
@@ -52,7 +52,7 @@ def start_train(user_medicine_tensor, medicine_tensor):
 
     # Create a model that takes in raw query features, and
     index = tfrs.layers.factorized_top_k.BruteForce(model.user_model)
-# recommends movies out of the entire movies dataset.
+    # recommends movies out of the entire movies dataset.
     index.index_from_dataset(
         tf.data.Dataset.zip((medicine_tensor.batch(100),
                              medicine_tensor.batch(100).map(
@@ -75,8 +75,11 @@ def export_model(index):
 
 
 def import_model(path):
-    loaded = tf.saved_model.load(path)
+    return tf.saved_model.load(path)
 
-    _, results = loaded(tf.constant(["42"]))  # type: ignore
 
-    print(f"Recommendations: {results[0][:3]}")
+def get_user_recommendations(user_id, model):
+    _, results = model(tf.constant([user_id]))  # type: ignore
+
+    return results
+
