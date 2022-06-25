@@ -14,4 +14,9 @@ password = sample_password
 host = 127.0.0.1
 port = 5432
 database = sample_database
+
+
+[DATASET]
+medicine_set = path/to/medicine_set.pkl
+user_med_pd = path/to/user_medicine_pd.pkl
 ```

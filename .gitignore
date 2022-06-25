@@ -158,3 +158,4 @@ cython_debug/
 *.pkl
 
 wandb/
+saved_models/
