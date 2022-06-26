@@ -1,6 +1,7 @@
 class Dataset:
     def __init__(self, unique_medicine_names=None,
                  unique_user_ids=None,
+                 unique_medicine_ids=None,
                  medicine_dataset=None,
                  user_medicine_dataset=None,
                  medicine_titles=None,
@@ -9,6 +10,7 @@ class Dataset:
                  test=None):
 
         self.unique_medicine_names = unique_medicine_names
+        self.unique_medicine_ids = unique_medicine_ids
         self.unique_user_ids = unique_user_ids
         self.medicine_dataset = medicine_dataset
         self.user_medicine_dataset = user_medicine_dataset
