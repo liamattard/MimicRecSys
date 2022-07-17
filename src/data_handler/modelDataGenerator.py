@@ -1,4 +1,5 @@
 from src.utils.classes.Dataset import Dataset
+from sklearn.model_selection import train_test_split
 
 import tensorflow as tf
 import numpy as np
@@ -11,6 +12,12 @@ log = logging.getLogger("Data loader")
 def generate_pure_coll(user_med_pd, med_set):
     user_med_pd = user_med_pd.astype('string')
     user_med_pd = user_med_pd.drop_duplicates()
+    user_med_pd = user_med_pd.drop(
+                    ['drug_id', 'has_past_medicine'], axis=1)
+    user_med_pd = user_med_pd.sample(frac=1, random_state=1).reset_index()
+
+    train_pd, test_pd = train_test_split(
+        user_med_pd, test_size=0.2, shuffle=False)
 
     user_med_dataset = tf.data.Dataset.from_tensor_slices(
                                         {'medicine_name':
@@ -18,14 +25,21 @@ def generate_pure_coll(user_med_pd, med_set):
                                          'user_id':
                                             user_med_pd['subject_id']})
 
+    train = tf.data.Dataset.from_tensor_slices(
+                                        {'medicine_name':
+                                            train_pd['drug'],
+                                         'user_id':
+                                            train_pd['subject_id']})
+
+    test = tf.data.Dataset.from_tensor_slices(
+                                        {'medicine_name':
+                                            test_pd['drug'],
+                                         'user_id':
+                                            test_pd['subject_id']})
+
     medicine_dataset = tf.data.Dataset.from_tensor_slices(list(med_set))
 
     tf.random.set_seed(42)
-    shuffled = user_med_dataset.shuffle(100_000, seed=42,
-                                        reshuffle_each_iteration=False)
-
-    train = shuffled.take(80_000)
-    test = shuffled.skip(80_000).take(20_000)
 
     med_titles = medicine_dataset.batch(1_000)
     user_ids = user_med_dataset.batch(1_000).map(lambda x: x['user_id'])
